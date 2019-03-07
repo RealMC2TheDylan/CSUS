@@ -1,0 +1,73 @@
+  //this code is intended to be used with arduino
+  #include <Sabertooth.h>
+
+  Sabertooth ST(128);
+
+  const int P1 = 2;
+  const int P2 = 3;
+  const int P3 = 4;
+
+  int P1state = 0;
+  int P2state = 0;
+  int P3state = 0;
+
+  int power;
+ 
+  
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+  SabertoothTXPinSerial.begin(9600);
+  ST.drive(0);
+  ST.turn(0);
+  pinMode(P1, INPUT_PULLUP);
+  pinMode(P2, INPUT_PULLUP);
+  pinMode(P3, INPUT_PULLUP);
+
+  ST.drive(0);
+  ST.turn(0);
+}
+
+void loop() {
+  //set power
+  power=80;
+  //read inputs
+  P1state = digitalRead(P1); //forward
+  P2state = digitalRead(P2); //right
+  P3state = digitalRead(P3); //left
+
+  if (P1state == LOW){
+    ST.drive(power);
+    Serial.println("forward");
+    if (P2state == LOW){
+      ST.turn(100);
+      Serial.println("turn right");
+    }
+    if (P3state == LOW){
+      ST.turn(-100);
+      Serial.println("turn left");
+    }
+  }
+  //if forward not pressed stop
+  if (P1state == HIGH){
+    ST.drive(0);
+    Serial.println("stop");
+    //if right turn pressed turn on spot
+   if (P2state == LOW){
+      ST.turn(power);
+      Serial.println("turn right on spot");
+   }
+    //if left turn pressed turn on spot
+    if (P3state == LOW){
+      ST.turn(-power);
+      Serial.println("turn left on spot");
+    }
+  }
+  if (P2state == HIGH){
+    ST.turn(0);
+  }
+  if (P3state == HIGH){
+    ST.turn(0);
+  }
+  delay(10);
+}
