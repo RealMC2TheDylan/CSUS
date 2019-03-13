@@ -3,7 +3,8 @@ import sys
 import os
 import socket
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QLabel, QLineEdit, QTextEdit, QGridLayout, QPushButton, QSpacerItem, QDial
-
+HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
+PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
 class Client(QWidget):
 
     def __init__(self, name = "UGV Control"):
@@ -72,15 +73,29 @@ class Client(QWidget):
         self.setLayout(grid)
 	
     def isServerOn(self):
-        strMessage = "UGV not Connected";
+        strMessage = "UGV is connected";
         self.SW = SecondWindow(strMessage);
         self.SW.show();
 		
  
 class SecondWindow(QMainWindow):
+			
     def __init__(self, message):
         super(SecondWindow, self).__init__()
         lbl = QLabel(message, self)
+        self.setWindowTitle('Connection Status');
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.bind((HOST, PORT))
+            s.listen()
+            conn, addr = s.accept()
+            with conn:
+                print('Connected by', addr)
+                while True:
+                    data = conn.recv(1024)
+                    if not data:
+                        break
+                    conn.sendall(data)
+        
 
 objTest = Client();
 
