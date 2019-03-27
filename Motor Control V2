@@ -1,0 +1,57 @@
+  #include <Sabertooth.h>
+
+  Sabertooth ST(128);
+  const byte Pin1 = 2;
+  const byte Pin2 = 3;
+  const byte Pin3 = 18;
+  const byte Pin4 = 19;
+  
+  
+void setup() {
+  Serial.begin(9600);
+  //Setting up interrupts
+  pinMode(Pin1, INPUT_PULLUP);
+  pinMode(Pin2, INPUT_PULLUP);
+  pinMode(Pin3, INPUT_PULLUP);
+  pinMode(Pin4, INPUT_PULLUP);
+  pinMode(13, OUTPUT);
+  attachInterrupt(digitalPinToInterrupt(Pin1), RF, LOW);
+  attachInterrupt(digitalPinToInterrupt(Pin2), LF, LOW);
+  attachInterrupt(digitalPinToInterrupt(Pin3), RB, FALLING);
+  attachInterrupt(digitalPinToInterrupt(Pin4), LB, FALLING);
+
+  SabertoothTXPinSerial.begin(9600);
+  ST.drive(0);
+  ST.turn(0);
+}
+
+void loop() {
+// travels in a line until turned off 
+  digitalWrite(13,LOW);
+  int power=30;
+  ST.turn(0);
+  ST.drive(power);
+}
+
+void RF(){
+    ST.drive(-40);
+    ST.turn(-126);
+    digitalWrite(13, HIGH);
+}
+
+void LF(){
+
+    ST.drive(-40);
+    ST.turn(127);
+    digitalWrite(13, HIGH);
+}
+
+void RB(){
+  ST.drive(20);
+  ST.turn(-60);
+}
+
+void LB(){
+  ST.drive(20);
+  ST.turn(60);
+}
