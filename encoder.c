@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <wiringPi.h>
 #include <time.h>
+#include <stdbool.h>
  
 #define RotateAPin 0 //Define as CLK
 #define RotateBPin 1// Define as DT
@@ -62,23 +63,24 @@ int main(void)
 	int tmp = 0;
 	clock_t t;
 	double time_taken;
-
+	bool new_t = true;
 	while(1){
-		t = clock();
+		if(new_t == true){
+			t = clock();
+			new_t = false;
+		}
 		rotaryDeal();
 		//if (tmp != globalCounter){
 		//	printf("%d\n", globalCounter);
 		//	tmp = globalCounter;
 		//}
-		if(tickCount != globalCounter){
-			tickCount = globalCounter;
-		}
-
-		if(tickCount==48 | tickCount==-48){
+		tickCount++;
+		if(tickCount==50){
 			t = clock() - t;
 			time_taken = ((double)t)/CLOCKS_PER_SEC;
 			printf("%f\n",time_taken);
 			tickCount = 0;
+			new_t = true;
 		}
 	}
  
