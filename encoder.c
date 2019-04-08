@@ -74,7 +74,10 @@ int main(void)
 		//	printf("%d\n", globalCounter);
 		//	tmp = globalCounter;
 		//}
-		tickCount++;
+		if(tmp != globalCounter) {
+			tmp = globalCounter;
+			tickCount++;
+		}
 		if(tickCount==50){
 			t = clock() - t;
 			time_taken = ((double)t)/CLOCKS_PER_SEC;
