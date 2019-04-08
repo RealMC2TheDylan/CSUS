@@ -1,0 +1,18 @@
+<launch>
+
+<node pkg = "robot_setup_pkg" type="robot_setup_pkg_base_controller_node" name = "robot_setup_pkg_base_controller_node" output = "screen">
+</node>
+
+<node pkg = "robot_setup_pkg" type="robot_setup_pkg_tf_broadcaster_node" name = "robot_setup_pkg_tf_broadcaster_node" output = "screen">
+</node>
+
+<node pkg="rplidar_ros" type="rplidarNodeClient" name="rplidarNodeClient" output="screen">
+    
+</node>
+
+<node pkg="robot_setup_pkg" type="robot_setup_pkg_tf_odometry_node" name="robot_setup_pkg_tf_odometry_node" output="screen">
+    
+</node>
+
+
+</launch>
