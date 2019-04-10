@@ -27,5 +27,5 @@ if rval:
     frame=frame.flatten()
     print("pre tostring", frame)
     data = json.dumps({"vid": frame})
-    clientSocket.sendto(data,(HOST,PORT))    
+    clientSocket.send(data.encode(),(HOST,PORT))    
 
