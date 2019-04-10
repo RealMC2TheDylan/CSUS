@@ -2,6 +2,7 @@ import time
 import cv2
 import numpy as np
 from socket import *
+import json
 
 
     
@@ -25,7 +26,6 @@ if rval:
     print("pre flatten",frame)    
     frame=frame.flatten()
     print("pre tostring", frame)
-    data=frame.tostring()
-    print("sent", frame)
+    data = json.dumps({"vid": frame})
     clientSocket.sendto(data,(HOST,PORT))    
 
