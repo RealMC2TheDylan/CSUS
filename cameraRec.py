@@ -9,8 +9,11 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.bind((UDP_IP, UDP_PORT))
 
 while True:
-        data, addr = sock.recvfrom(1024)
-        print ("recieved:" ,data)
+        data = sock.recvfrom(1024)
+        data = json.loads(data.decode())
+        frame = data.get("vid")
+        print(frame)
+
 
 
 
