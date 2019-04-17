@@ -10,8 +10,8 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define RotateAPin_L 2 //Define as CLK
-#define RotateBPin_L 3 // Define as DT
+#define RotateAPin_L 21 //Define as CLK
+#define RotateBPin_L 22 // Define as DT
 
 static volatile int globalCounter_L = 0; // will need to be modifiable from other nodes
 
