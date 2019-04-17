@@ -10,10 +10,10 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define RotateAPin_L 2 //Define as CLK
-#define RotateBPin_L 3 // Define as DT
+#define RotateAPin_L 0 //Define as CLK
+#define RotateBPin_L 1 // Define as DT
 
-static volatile int globalCounter_L = 0; // will need to be modifiable from other nodes
+static volatile int globalCounter_R = 0; // will need to be modifiable from other nodes
 
 unsigned char flag;
 unsigned char Last_RoB_Status;
@@ -21,8 +21,8 @@ unsigned char Current_RoB_Status;
 
 int main(void)
 {
-	pinMode(RotateAPin_L, INPUT);
-	pinMode(RotateBPin_L, INPUT);
+	pinMode(RotateAPin_R, INPUT);
+	pinMode(RotateBPin_R, INPUT);
 	while (1)
 	{
 		rotaryDeal();
@@ -31,11 +31,11 @@ int main(void)
 
 void rotaryDeal(void)
 {
-	Last_RoB_Status = digitalRead(RotateBPin_L);
+	Last_RoB_Status = digitalRead(RotateBPin_R);
 
-	while (!digitalRead(RotateAPin_L)) // continue checking until leading edge of pin A
+	while (!digitalRead(RotateAPin_R)) // continue checking until leading edge of pin A
         {
-		Current_RoB_Status = digitalRead(RotateBPin_L); // read pin B
+		Current_RoB_Status = digitalRead(RotateBPin_R); // read pin B
 		flag = 1;
 	}
 
@@ -43,11 +43,11 @@ void rotaryDeal(void)
 		flag = 0;
 		if ((Last_RoB_Status == 0) && (Current_RoB_Status == 1)) // cw
                 {
-			globalCounter_L++;
+			globalCounter_R++;
 		}
 		if ((Last_RoB_Status == 1) && (Current_RoB_Status == 0)) // ccw
                 {
-			globalCounter_L--;
+			globalCounter_R--;
 		}
 	}
 }
