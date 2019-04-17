@@ -43,19 +43,17 @@ void rotaryDeal(void)
 void motordrive(int motor, int power)
 {
 	byte command, magnitude;
-	power = constrain(power, -127, 127);
-	magnitude = abs(power) >> 1;
-	if (motor == 1)
+	power = constrain(power, -63, 63);
+		if (motor == 1)
 	{
-		command = power < 0 ? 63 - magnitude : 64 + magnitude;
+		command = 64 + power;
 	}
 	else if (motor == 2)
 	{
 		command = power < 0 ? 191 - magnitude : 192 + magnitude;
 	}
 
-	command = constrain(command, 1, 254);
-	serialPuts(fd, command);
+	serialPuts(fd, &command);
 
 }
 
