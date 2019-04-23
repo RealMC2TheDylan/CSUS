@@ -41,22 +41,44 @@ void motordrive(int motor, int power)
 int main()
 {
 	int motor;
-	int p,pr,py;
-	int i;
-
+	int pr,py;
+	float ul, ur;
+	float L, r, v;
+	float dx, dy, dtheta;
+	/*
+	L = .780;
+	r = .1275;
+	v = sqrt((dx*dx) + (dy*dy));
+	*/
 	motordrive(1, 0);
 	motordrive(2, 0);
 
 	for (int x = 0; x == 6; x++) {
-		printf("Select a velocity between -1.2 and 1.2 m/sec")
-			scanf("%i", p);
-		if (p >= 0) {
-			pr = round((p / .0241));
-			pl = pr
+		printf("Select Angular velocity for right wheel between -9 and 9\n");
+		scanf("%f\n", &ur);
+		printf("Select Angular velocity for left wheel between -9 and 9\n");
+		scanf("%f\n", &ul);
+		/*
+		ul = (-0.5*dtheta*L+v)/r;
+		ur= (0.5*dtheta*L+v)/r;
+		*/
+		if (ur > 0) {
+			pr = round((ur / .1937));
 		}
-		else if (p < 0) {
-			pr = round((p / .0235));
-			pl = round((p / .0239));
+		else if (ur < 0) {
+			pr = round((ur / .1934));
+		}
+		else {
+			pr = 0;
+		}
+		if (ul > 0) {
+			pl = round((ul / .1937));
+		}
+		else if (pl < 0) {
+			pl = round((ul / .1934));
+		}
+		else {
+			pl = 0;
 		}
 		motordrive(1, pr);
 		motordrive(2, pl);
