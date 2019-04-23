@@ -45,23 +45,25 @@ int main()
 	float ul, ur;
 	float L, r, v;
 	float dx, dy, dtheta;
-	/*
+	
 	L = .780;
 	r = .1275;
-	v = sqrt((dx*dx) + (dy*dy));
-	*/
+
 	motordrive(1, 0);
 	motordrive(2, 0);
 
 	for (int x = 0; x == 6; x++) {
-		printf("Select Angular velocity for right wheel between -9 and 9\n");
-		scanf("%f\n", &ur);
-		printf("Select Angular velocity for left wheel between -9 and 9\n");
-		scanf("%f\n", &ul);
-		/*
+		printf("input dx between -6.742 and 6.742\n");
+		scanf("%f\n", &dx);
+		printf("input dy between -6.742 and 6.742\n");
+		scanf("%f\n", &dy);
+		printf("input dtheta between -90 and 90\n");
+		scanf("%f\n", &dtheta);
+		
 		ul = (-0.5*dtheta*L+v)/r;
 		ur= (0.5*dtheta*L+v)/r;
-		*/
+		v = sqrt((dx*dx) + (dy*dy));
+		
 		if (ur > 0) {
 			pr = round((ur / .1937));
 		}
