@@ -41,28 +41,32 @@ void motordrive(int motor, int power)
 int main()
 {
 	int motor;
-	int pr,py;
+	int pr,pl;
 	float ul, ur;
-	float L, r, v;
-	float dx, dy, dtheta;
+	double L, r, v, x1, y, combine;
+	double dx, dy, dtheta;
 	
-	L = .780;
+	L = .420;
 	r = .1275;
 
 	motordrive(1, 0);
 	motordrive(2, 0);
 
-	for (int x = 0; x == 6; x++) {
+	for (int x = 0; x < 6; x++) {
 		printf("input dx between -6.742 and 6.742\n");
-		scanf("%f\n", &dx);
+		scanf("%f", &dx);
 		printf("input dy between -6.742 and 6.742\n");
-		scanf("%f\n", &dy);
+		scanf("%f", &dy);
 		printf("input dtheta between -90 and 90\n");
-		scanf("%f\n", &dtheta);
+		scanf("%f", &dtheta);
 		
-		ul = (-0.5*dtheta*L+v)/r;
-		ur= (0.5*dtheta*L+v)/r;
-		v = sqrt((dx*dx) + (dy*dy));
+		x1 = dx * dx;
+		y = dy * dy;
+		combine = x1 + y;
+		v = sqrt(combine);
+
+		ul = (-0.5*dtheta*L+v);
+		ur= (0.5*dtheta*L+v);
 		
 		if (ur > 0) {
 			pr = round((ur / .1937));
@@ -76,7 +80,7 @@ int main()
 		if (ul > 0) {
 			pl = round((ul / .1937));
 		}
-		else if (pl < 0) {
+		else if (ul < 0) {
 			pl = round((ul / .1934));
 		}
 		else {
