@@ -6,10 +6,8 @@
       Input reset from Encoder Left Code
 */
 
-
-#include <ros/ros.h>
-#include <std_msgs/Float32.h>
-
+#include <ros/ros.h>                                   /* Edited by Kaicha */
+#include <std_msgs/Int32.h>                          /* 04/24/19   */                              
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
@@ -28,6 +26,7 @@ static unsigned char Last_RoB_Status;
 static unsigned char Current_RoB_Status;
 
 int globalCounter_R = 0 ;
+int reset = 0;                      // Temporary
  
 void rotaryDeal(void)
 {
@@ -50,8 +49,20 @@ void rotaryDeal(void)
 }
 
  
-int main(void)
+int main(int argc, char** argv)
 {
+    /* Edited by Kaicha */
+    ros::init(argc, argv, "encoder_pkg_rightEncoder_node");  
+    ros::NodeHandle n;
+    ros::Publisher encoderR_pub = n.advertise<std_msgs::Int32>("global_counter_r", 1);
+    std_msgs::Int32 global_counter_r_value;
+    ros::Rate r(20.0);
+    /* 04/24/19         */
+
+
+
+
+
     if(wiringPiSetup() < 0){
 		fprintf(stderr, "Unable to initialize wiringPi:%s\n",strerror(errno));
 		return 1;
@@ -60,7 +71,7 @@ int main(void)
 	pinMode(RotateAPinR, INPUT);
 	pinMode(RotateBPinR, INPUT);
 
-  	while(1){
+  	while(n.ok()){
 
 		rotaryDeal();
 		
@@ -68,5 +79,12 @@ int main(void)
             globalCounter_R=0;
             reset=false;
         }
+        
+
+
+
+        /* Edited by Kaicha */
+        global_counter_r_value.data = globalCounter_R;
+        encoderR_pub.publish(global_counter_r_value);         
     }
 }
