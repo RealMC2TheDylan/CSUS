@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <math.h>
+#include <cmath>
 
 const int fd = serialOpen("/dev/ttySAC0", 38400);
 
@@ -42,52 +42,35 @@ int main()
 {
 	int motor;
 	int pr,pl;
-	float ul, ur;
-	double L, r, v, x1, y, combine;
-	double dx, dy, dtheta;
-	
+	double ul, ur;
+	double L, vx, vz, r;
+		
 	L = .420;
-	r = .1275;
+    r=.1275
 
 	motordrive(1, 0);
 	motordrive(2, 0);
 
-	for (int x = 0; x < 6; x++) {
-		printf("input dx between -6.742 and 6.742\n");
-		scanf("%f", &dx);
-		printf("input dy between -6.742 and 6.742\n");
-		scanf("%f", &dy);
-		printf("input dtheta between -90 and 90\n");
-		scanf("%f", &dtheta);
+    while(1){	     
+    	ul = (-0.5*vz*L+vx)/r;
+		ur = (0.5*vz*L+vx)/r;
+        
 		
-		x1 = dx * dx;
-		y = dy * dy;
-		combine = x1 + y;
-		v = sqrt(combine);
-
-		ul = (-0.5*dtheta*L+v);
-		ur= (0.5*dtheta*L+v);
-		
-		if (ur > 0) {
+		if (vx > 0) {
 			pr = round((ur / .1937));
+            pl = round((ul / .1937));
 		}
-		else if (ur < 0) {
+		else if (vx < 0) {
 			pr = round((ur / .1934));
+            pl = round((ul / .1934));
 		}
 		else {
 			pr = 0;
-		}
-		if (ul > 0) {
-			pl = round((ul / .1937));
-		}
-		else if (ul < 0) {
-			pl = round((ul / .1934));
-		}
-		else {
-			pl = 0;
-		}
+            pl = 0;
+	    }
 		motordrive(1, pr);
 		motordrive(2, pl);
+
 	}
 	motordrive(1, 0);
 
