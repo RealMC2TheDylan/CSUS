@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <chrono>
 #include <thread>
+#include <math.h>
 
 using namespace std::this_thread;
 using namespace std::chrono;
