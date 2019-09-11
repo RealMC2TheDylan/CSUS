@@ -18,6 +18,17 @@
 #include <stdbool.h>
 #include <cmath>
 
+int globalCounter_R;
+int globalCounter_L;
+
+void globalCounterRCallback(const std_msgs::Int32::ConstPtr &globalCounter_R_pub) {
+	globalCounter_R = globalCounter_R_pub->data;
+}
+
+void globalCounterLCallback(const std_msgs::Int32::ConstPtr &globalCounter_L_pub) {
+	globalCounter_L
+}
+
 int main(int argc, char** argv)
 {
 	ros::init(argc, argv, "velocity_computation_node");
@@ -25,8 +36,8 @@ int main(int argc, char** argv)
 	ros::Publisher velocity_pub = n.advertise<std::msgs::Float32MultiArray>("vx_vy_vth", 3);
 	std_msgs::Float32MultiArray vx0_vy1_vth3;
 
-	ros::Subscriber sub = n.subscriber("global_counter_r_value", 1, ***);
-	ros::Subscriber sub = n.subscriber("Counter_L", 1, ***);
+	ros::Subscriber sub = n.subscriber("global_counter_r", 1, globalCounterRCallback);
+	ros::Subscriber sub = n.subscriber("global_counter_l", 1, globalCounterLCallback);
 	ros::Rate r(20.0);
 
 	float r = .1275;
@@ -35,8 +46,8 @@ int main(int argc, char** argv)
 	while (n.ok())
 	{
 		ros::spinOnce();
-		ul = (global_counter_l_value / (float)1536) / (1/20); // rad/s
-		ur = (global_counter_r_value / (float)1536) / (1/20); // rad/s
+		ul = (globalCounter_L / (float)1536) / (1/20); // rad/s
+		ur = (globalCounter_R / (float)1536) / (1/20); // rad/s
 		vx = (r / 2)*(ur + ul);
 		vy = 0;
 		vth = (r / L)*(ur - ul);
