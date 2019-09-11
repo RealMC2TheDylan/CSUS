@@ -49,8 +49,8 @@ int main(int argc, char ** argv)
 {
 	ros::init(argc, argv, "encoder_pkg_leftEncoder_node");
 	ros::NodeHandle n;
-	ros::Publisher encoderL_pub = n.advertise<std_msgs::Int32>("Counter_L",1);
-	std_msgs::Int32 globalCounter_L;
+	ros::Publisher encoderL_pub = n.advertise<std_msgs::Int32>("global_counter_l",1);
+	std_msgs::Int32 global_counter_l_value;
 
 	ros::Rate w(20.0);
 	//ROS intialization
@@ -71,7 +71,7 @@ int main(int argc, char ** argv)
 
 		ros::spinOnce();
 
-		encoderL_pub.publish(Counter_L);
+		encoderL_pub.publish(global_counter_l_value);
 			
 		globalCounter_L = 0;
 			

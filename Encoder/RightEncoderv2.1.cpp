@@ -4,7 +4,7 @@
 */
 
 #include <ros/ros.h>						//ROS Specific Headers         
-#include <std_msgs/Float32.h>   
+#include <std_msgs/Int32.h>   
 
 #include <stdio.h>
 #include <string.h>
@@ -51,8 +51,8 @@ int main(int argc, char** argv)
 {
 	ros::init(argc, argv, "encoder_pkg_rightEncoder_node");
 	ros::NodeHandle n;
-	ros::Publisher encoderR_pub = n.advertise<std_msgs::Float32>("Counter_R", 1);
-	std_msgs::Float32 globalCounter_R;
+	ros::Publisher encoderR_pub = n.advertise<std_msgs::Float32>("global_counter_r", 1);
+	std_msgs::Float32 global_counter_r_value;
 	ros::Rate r(20.0);
 	
 
@@ -74,7 +74,7 @@ int main(int argc, char** argv)
 
 		ros::spinOnce();
 
-		encoderR_pub.publish(Counter_R);
+		encoderR_pub.publish(global_counter_r_value);
 
 		globalCounter_R = 0;
 		
