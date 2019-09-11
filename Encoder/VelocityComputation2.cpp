@@ -25,8 +25,8 @@ int main(int argc, char** argv)
 	ros::Publisher velocity_pub = n.advertise<std::msgs::Float32MultiArray>("vx_vy_vth", 3);
 	std_msgs::Float32MultiArray vx0_vy1_vth3;
 
-	ros::Subscriber sub = n.subscriber("globalCounter_R", 1, ***);
-	ros::Subscriber sub = n.subscriber("globalCounter_L", 1, ***);
+	ros::Subscriber sub = n.subscriber("Counter_R", 1, ***);
+	ros::Subscriber sub = n.subscriber("Counter_L", 1, ***);
 	ros::Rate r(20.0);
 
 	float r = .1275;
@@ -35,8 +35,8 @@ int main(int argc, char** argv)
 	while (n.ok())
 	{
 		ros::spinOnce();
-		ul = (globalCounter_L / (float)1536) / (1/20); // rad/s
-		ur = (globalCounter_R / (float)1536) / (1/20); // rad/s
+		ul = (Counter_L / (float)1536) / (1/20); // rad/s
+		ur = (Counter_R / (float)1536) / (1/20); // rad/s
 		vx = (r / 2)*(ur + ul);
 		vy = 0;
 		vth = (r / L)*(ur - ul);
