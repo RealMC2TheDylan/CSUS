@@ -26,7 +26,7 @@ void globalCounterRCallback(const std_msgs::Int32::ConstPtr &globalCounter_R_pub
 }
 
 void globalCounterLCallback(const std_msgs::Int32::ConstPtr &globalCounter_L_pub) {
-	globalCounter_L
+	globalCounter_L = globalCounter_L_pub->data;
 }
 
 int main(int argc, char** argv)
