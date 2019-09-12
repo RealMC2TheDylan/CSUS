@@ -45,7 +45,7 @@ void rotaryDeal_L(void)
 	}
 }
 
-int main(int argc, char ** argv)
+int main(int argc, char** argv)
 {
 	ros::init(argc, argv, "encoder_pkg_leftEncoder_node");
 	ros::NodeHandle n;
@@ -69,7 +69,6 @@ int main(int argc, char ** argv)
 	{
 		rotaryDeal_L();
 
-		ros::spinOnce();
 
 		global_counter_l_value.data = globalCounter_L;
 		encoderL_pub.publish(global_counter_l_value);
