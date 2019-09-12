@@ -5,8 +5,8 @@
 */
 
 #include <ros/ros.h>                                   
-#include <std_msgs/int32.h> 
-#include <std_msgs/Float32MultiArray.h> 
+#include <std_msgs/Int32.h> 
+#include <std_msgs/Float32.h> 
 
 #include <stdio.h>
 #include <string.h>
@@ -31,10 +31,16 @@ void globalCounterLCallback(const std_msgs::Int32::ConstPtr &globalCounter_L_pub
 
 int main(int argc, char** argv)
 {
-	ros::init(argc, argv, "velocity_computation_node");
+	ros::init(argc, argv, "encoder_pkg_velocityComputation_node");
 	ros::NodeHandle n;
-	ros::Publisher velocity_pub = n.advertise<std::msgs::Float32MultiArray>("vx_vy_vth", 3);
-	std_msgs::Float32MultiArray vx0_vy1_vth3;
+	ros::Publisher velocity_pub_vx = n.advertise<std_msgs::Float32>("v_x", 1);
+	ros::Publisher velocity_pub_vy = n.advertise<std_msgs::Float32>("v_y", 1);
+	ros::Publisher velocity_pub_vth = n.advertise<std_msgs::Float32>("v_th", 1);
+	
+	std_msgs::Float32 v_x_value;
+	std_msgs::Float32 v_y_value;
+	std_msgs::Float32 v_th_value;
+
 
 	ros::Subscriber sub = n.subscriber("global_counter_r", 1, globalCounterRCallback);
 	ros::Subscriber sub = n.subscriber("global_counter_l", 1, globalCounterLCallback);
@@ -52,9 +58,13 @@ int main(int argc, char** argv)
 		vy = 0;
 		vth = (r / L)*(ur - ul);
 
-		vx0_vy1_vth2.data[0] = vx;
-		vx0_vy1_vth2.data[1] = vy;
-		vx0_vy1_vth2.data[2] = vth;
-		velocity_pub.publish(vx0_vy1_vth2);
+		v_x_value.data = vx;
+		v_y_value.data = vy;
+		v_th_value.data = vth;
+		
+		velocity_pub_vx.publish(v_x_value);
+		velocity_pub_vy.publish(v_y_value);
+		velocity_pub_vth.publish(v_th_value);
+		
 	}
 }
