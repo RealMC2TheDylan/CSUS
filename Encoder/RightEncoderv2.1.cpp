@@ -72,7 +72,6 @@ int main(int argc, char** argv)
 
 		rotaryDeal();
 
-		ros::spinOnce();
 
 		global_counter_r_value.data = globalCounter_R;
 		encoderR_pub.publish(global_counter_r_value);
