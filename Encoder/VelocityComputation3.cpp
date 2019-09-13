@@ -5,6 +5,7 @@
     v3 uses a ros::Timer function (maybe it works... maybe it doesn't... who knows?... Kaicha, please help.  sincerely Morgan, Nick and Dylan)
 */
 
+
 #include <ros/ros.h>                                   
 #include <std_msgs/Int32.h> 
 #include <std_msgs/Float32.h> 
@@ -36,8 +37,10 @@ void globalCounterLCallback(const std_msgs::Int32::ConstPtr &globalCounter_L_pub
 	globalCounter_L = globalCounter_L_pub->data;
 }
 
-void callback1(const ros::TimerEvent&) // do this every 50ms
+void callback1(const ros::TimerEvent&)
 {
+    ros::spinOnce();
+    
     ul = ((globalCounter_L - prev_globalCounter_L) / (float)1536) * 20; // rad/s
 	ur = ((globalCounter_R - prev_globalCounter_R) / (float)1536) * 20; // rad/s
     prev_globalCounter_L = globalCounter_L;
@@ -46,9 +49,6 @@ void callback1(const ros::TimerEvent&) // do this every 50ms
 	vy = 0;
 	vth = (r / L)*(ur - ul);
 
-	v_x_value.data = vx;
-	v_y_value.data = vy;
-	v_th_value.data = vth;
 }
 
 int main(int argc, char** argv)
@@ -68,12 +68,19 @@ int main(int argc, char** argv)
 	ros::Subscriber sub_l = n.subscribe("global_counter_l", 1, globalCounterLCallback);
 	ros::Rate w(20.0);
 
-	velocity_pub_vx.publish(v_x_value);
+    ros::Timer timer1 = n.createTimer(ros::Duration(0.050), callback1);
+
+    //ros::spin();
+	while (n.ok())
+	{
+		
+	v_x_value.data = vx;
+	v_y_value.data = vy;
+	v_th_value.data = vth;
+
+    velocity_pub_vx.publish(v_x_value);
     velocity_pub_vy.publish(v_y_value);
 	velocity_pub_vth.publish(v_th_value);
-
-    ros::Timer timer1 = n.createTimer(ros::Duration(0.050), callback1); // go to callback1 whenever timer expires
-
-    ros::spin();
-	
+		
+	}
 }
