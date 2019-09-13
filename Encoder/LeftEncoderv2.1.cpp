@@ -73,7 +73,7 @@ int main(int argc, char** argv)
 		global_counter_l_value.data = globalCounter_L;
 		encoderL_pub.publish(global_counter_l_value);
 			
-		globalCounter_L = 0;
+		//globalCounter_L = 0;
 			
 		
 	}
