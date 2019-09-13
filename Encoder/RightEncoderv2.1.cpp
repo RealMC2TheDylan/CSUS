@@ -5,7 +5,7 @@
 
 #include <ros/ros.h>						//ROS Specific Headers         
 #include <std_msgs/Int32.h>   
-
+#include <std_msgs/Float32.h>
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
@@ -15,7 +15,6 @@
 #include <time.h>
 #include <stdbool.h>
 #include <cmath>
-
 
 #define RotateAPinR 0 //CLK pin
 #define RotateBPinR 1// DT(data) pin
@@ -46,19 +45,15 @@ void rotaryDeal(void)
 	}
 }
 
-
 int main(int argc, char** argv)
 {
 	ros::init(argc, argv, "encoder_pkg_rightEncoder_node");
 	ros::NodeHandle n;
-	ros::Publisher encoderR_pub = n.advertise<std_msgs::Float32>("global_counter_r", 1);
-	std_msgs::Float32 global_counter_r_value;
-	ros::Rate r(20.0);
+	ros::Publisher encoderR_pub = n.advertise<std_msgs::Int32>("global_counter_r", 1);
+	std_msgs::Int32 global_counter_r_value;
 	
-
-
-
-
+    ros::Rate r(20.0);
+	
 
 	if (wiringPiSetup() < 0) {
 		fprintf(stderr, "Unable to initialize wiringPi:%s\n", strerror(errno));
@@ -68,18 +63,18 @@ int main(int argc, char** argv)
 	pinMode(RotateAPinR, INPUT);
 	pinMode(RotateBPinR, INPUT);
 
-	while (n.ok()) {
 
+
+	while (n.ok()) 
+    {
 		rotaryDeal();
 
 
 		global_counter_r_value.data = globalCounter_R;
 		encoderR_pub.publish(global_counter_r_value);
 
-		globalCounter_R = 0;
+		//globalCounter_R = 0;
 		
 		
 	}
-		
-	
 }
