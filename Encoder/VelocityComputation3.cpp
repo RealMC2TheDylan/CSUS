@@ -1,10 +1,8 @@
 /*
-	Velocity Computation v2.0
-	receives encoder ticks
+	Velocity Computation v1.0
+	receives angular velocities
 	computes translational velocities and sends to navigation
-    v3 uses a ros::Timer function (maybe it works... maybe it doesn't... who knows?... Kaicha, please help.  sincerely Morgan, Nick and Dylan)
 */
-
 
 #include <ros/ros.h>                                   
 #include <std_msgs/Int32.h> 
@@ -37,10 +35,10 @@ void globalCounterLCallback(const std_msgs::Int32::ConstPtr &globalCounter_L_pub
 	globalCounter_L = globalCounter_L_pub->data;
 }
 
-void callback1(const ros::TimerEvent&)
+void callback1(const ros::TimerEvent& event)
 {
-    ros::spinOnce();
-    
+    ROS_INFO("We made it to here2");
+   
     ul = ((globalCounter_L - prev_globalCounter_L) / (float)1536) * 20; // rad/s
 	ur = ((globalCounter_R - prev_globalCounter_R) / (float)1536) * 20; // rad/s
     prev_globalCounter_L = globalCounter_L;
@@ -68,11 +66,15 @@ int main(int argc, char** argv)
 	ros::Subscriber sub_l = n.subscribe("global_counter_l", 1, globalCounterLCallback);
 	ros::Rate w(20.0);
 
-    ros::Timer timer1 = n.createTimer(ros::Duration(0.050), callback1);
+    ROS_INFO("We made it to here1");
+
+    ros::Timer timer1 = n.createTimer(ros::Duration(0.100), callback1);
 
     //ros::spin();
 	while (n.ok())
 	{
+
+     ros::spinOnce();
 		
 	v_x_value.data = vx;
 	v_y_value.data = vy;
