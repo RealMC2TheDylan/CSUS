@@ -1,0 +1,31 @@
+import struct
+
+with open("/dev/input/js0", "rb") as f:
+   while True:
+        a = f.read(8)
+        t, value, code, index = struct.unpack("<ihbb", a) # 4 bytes, 2 bytes, 1 byte, 1 byte
+        # t: time in ms
+        # index: button/axis number (0 for x-axis)
+        # code: 1 for buttons, 2 for axis
+        # value: axis position, 0 for center, 1 for buttonpress, 0 for button release
+        # print("t: {:10d} ms, value: {:6d}, code: {:1d}, index: {:1d}".format(t, value, code, index))
+        # axis index 0 = x-axis, 1 = y-axis, 2 = rz-axis
+        # button index 3 = 4 =
+
+        #basic directional control you can set it for two axes at once I think
+        if(value >= 28000 and code == 2 and index == 1):
+            print("forward")
+            data='w';
+        elif(value <= -28000 and code == 2 and index == 1):
+            print("reverse")
+            data='s';
+        elif(value <= -28000 and code == 2 and index == 0):
+            print("left")
+            data='a';
+        elif(value >= 28000 and code == 2 and index == 0):
+            print("right")
+            data='d';
+        elif(value == 1 and code == 1 and index == y): #needs the proper index for what we want to exit control with
+            data='h'
+            print("exiting program")
+            raise SystemExit
