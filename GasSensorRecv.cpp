@@ -1,41 +1,43 @@
-#include <iostream>
-#include <winsock2.h>
+//GasSensorRecv.cpp
 #include <stdio.h>
- 
-using namespace std;
- 
-int main()
+#include <wiringPi.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <strings.h>
+#include <string>
+#include <iostream>
+#include <bits/stdc++.h>
+
+#define SERVER_PORT 10502
+
+int main(intargc, char *argv[])
 {
-    WSADATA WSAData;
- 
-    SOCKET server, client;
-	int len;
-    SOCKADDR_IN serverAddr, clientAddr;
- 
-    WSAStartup(MAKEWORD(2,0), &WSAData);
-    server = socket(AF_INET, SOCK_STREAM, 0);
- 
-    serverAddr.sin_addr.s_addr = INADDR_ANY;
-    serverAddr.sin_family = AF_INET;
-    serverAddr.sin_port = htons(10500);
- 
-    bind(server, (SOCKADDR *)&serverAddr, sizeof(serverAddr));
-    listen(server, 0);
- 
-    cout << "Listening for incoming connections..." << endl;
-	
+    struct sockaddr_in sin;
     char buf[256];
-    int clientAddrSize = sizeof(clientAddr);
-	while(1){
-			if((client = accept(server, (SOCKADDR *)&clientAddr, &clientAddrSize))!= INVALID_SOCKET){
-					cout << "Client connected!" << endl;
-					while(recv(client,buf,sizeof(buf),0)){
-						//recv(client,buf,sizeof(buf),0);
-						printf("Gas Sensor Reads: %s\n",buf);
-						memset(buf,0,sizeof(buf));
-					}
-				}
-	}
-	closesocket(client);
-	cout << "Client DC." << endl;
+    socklen_t len;
+    int s, new_s;
+
+    bzero((char *)&sin,sizeof(sin));
+    sin.sin_family = AF_INET;
+    sin.sin_addr.s_addr = INADDR_ANY;
+    sin.sin_port = htons(SERVER_PORT);
+
+    s = socket(PF_INET,SOCK_STREAM,0);
+    bind(s, (struct sockaddr *)&sin, sizeof(sin));
+    listen(s, MAX_PENDING);
+    
+    while(1){
+        new_s = accept(s, (struct sockaddr *)&sin, &len);
+        while(recv(new_s, buf, len, 0) != 0)
+        {
+            printf("Gas Sensor Reads: %s\n",buf);
+        }
+        close(new_s);
+        close(s);
+        return 0;    
+    }
+    
 }
