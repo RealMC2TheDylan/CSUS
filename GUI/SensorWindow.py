@@ -1,5 +1,6 @@
+#!/usr/bin/env python2.7
 import gi
-import os
+import socket 
 gi.require_version('Gtk', '3.0')
 import Gas_label
 from gi.repository import Gtk
@@ -20,3 +21,4 @@ class SensorWindow(Gtk.Window):
 		Gtk.main()
 		
 		
+
