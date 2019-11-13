@@ -33,8 +33,14 @@ void twistCallback (const geometry_msgs::Twist &twist) {
 }
 
 
+//New code
+void globalCounterRCallback(const std_msgs::Int32::ConstPtr &globalCounter_R_pub) {
+	globalCounter_R = globalCounter_R_pub->data;
+}
 
-
+void globalCounterLCallback(const std_msgs::Int32::ConstPtr &globalCounter_L_pub) {
+	globalCounter_L = globalCounter_L_pub->data;
+}
 
 
 
@@ -75,6 +81,17 @@ void motordrive(int motor, int power)
 }
 
 
+//new code
+void callback1(const ros::TimerEvent& event)
+{
+    //ROS_INFO("We made it to here2");
+   
+    ulactual = ((globalCounter_L - prev_globalCounter_L) / (float)1536) * 20; // rad/s
+	uractual = ((globalCounter_R - prev_globalCounter_R) / (float)1536) * 20; // rad/s
+    prev_globalCounter_L = globalCounter_L;
+    prev_globalCounter_R = globalCounter_R;
+}
+
 //void initCmdVelSubscriber() {
     
 //ros::Subscriber<geometry_msgs::Twist> *cmd_sub = new ros::Subscriber<geometry_msgs::Twist>("cmd_vel", 10, &twistCallback);
@@ -87,9 +104,10 @@ int main(int argc, char **argv) {
     ros::init(argc, argv, "robot_setup_pkg_base_controller_node");
     ros::NodeHandle n;
     ros::Subscriber cmd_sub = n.subscribe("cmd_vel", 10, &twistCallback);
-	//what does Odom send?
-	//ros::Subscriber odom_sub = n.subscribe("file here", )
-
+	//neccessary subsribers to properly compute for change
+	ros::Subscriber sub_r = n.subscribe("global_counter_r", 1, globalCounterRCallback);
+	ros::Subscriber sub_l = n.subscribe("global_counter_l", 1, globalCounterLCallback);
+	ros::Timer timer1 = n.createTimer(ros::Duration(0.100), callback1);
    //initCmdVelSubscriber();    
     int motor;
 	int pr,pl;
@@ -101,8 +119,9 @@ int main(int argc, char **argv) {
 
 	motordrive(1, 0);
 	motordrive(2, 0);
-    ros::Rate loop_rate(50);        
-    
+    ros::Rate loop_rate(50);  
+	
+	
     while (ros::ok()) {
         ros::spinOnce();
         
@@ -110,20 +129,10 @@ int main(int argc, char **argv) {
         ul = (-0.5*vth*L+vx)/r;
 		ur = (0.5*vth*L+vx)/r;
         //actual values
-		ulactual = (-0.5*vtha*L+vxa)/r;
-		uractual = (0.5*vtha*L+vxa)/r;
-		//left side
-		if (ul < ulactual){
-			ul=ul+.5;
-		}else if(ul > ulactual){
-			ul=ul-.5;
-		}
-		//right side
-		if (ur < uractual){
-			ur=ur+.5;
-		}else if(ur > uractual){
-			ur=ur-.5;
-		}
+		//proportional control for left motor
+		ul=+2(ul-ulactual);
+		//proportional control for right motor
+		ur=+2(ur-uractual);
 		
 		if (vx > 0) {
 			pr = round((ur / .1937));
