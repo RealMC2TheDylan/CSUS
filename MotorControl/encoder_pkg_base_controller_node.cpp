@@ -87,7 +87,8 @@ int main(int argc, char **argv) {
     ros::init(argc, argv, "robot_setup_pkg_base_controller_node");
     ros::NodeHandle n;
     ros::Subscriber cmd_sub = n.subscribe("cmd_vel", 10, &twistCallback);
- 
+	//what does Odom send?
+	//ros::Subscriber odom_sub = n.subscribe("file here", )
 
    //initCmdVelSubscriber();    
     int motor;
@@ -105,10 +106,24 @@ int main(int argc, char **argv) {
     while (ros::ok()) {
         ros::spinOnce();
         
-
+		//desired values
         ul = (-0.5*vth*L+vx)/r;
 		ur = (0.5*vth*L+vx)/r;
-        
+        //actual values
+		ulactual = (-0.5*vtha*L+vxa)/r;
+		uractual = (0.5*vtha*L+vxa)/r;
+		//left side
+		if (ul < ulactual){
+			ul=ul+.5;
+		}else if(ul > ulactual){
+			ul=ul-.5;
+		}
+		//right side
+		if (ur < uractual){
+			ur=ur+.5;
+		}else if(ur > uractual){
+			ur=ur-.5;
+		}
 		
 		if (vx > 0) {
 			pr = round((ur / .1937));
