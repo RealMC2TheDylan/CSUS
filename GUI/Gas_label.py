@@ -9,7 +9,7 @@ class Gas_label(Gtk.Label):
         Gtk.Label.__init__(self, "Gas Data = " + str(data))
         HOST = '192.168.0.103'
         PORT = 10604
-	s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	    s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.bind((HOST, PORT))
         s.listen(10)
         conn = s.accept()[0]
